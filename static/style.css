@@ -1,0 +1,16 @@
+section.message section.message {
+    margin-left: 2em;
+}
+
+section.message {
+    border: solid black 1px;
+    margin-bottom: 1em;
+}
+
+.reponse {
+    margin-top: 1em;
+}
+
+.idMessage {
+    background-color: lightgreen;
+}
