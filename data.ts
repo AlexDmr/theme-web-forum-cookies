@@ -100,10 +100,10 @@ export function getMessage(id: number, L: MESSAGE[] = [...rootMessage.responses]
 
 export function toHTML( login?: string ): string {
     // lastModified = Date.now().toString();
-    const disconnectForm = `<form method="POST" action="/disconnect">
+    const disconnectForm = `<form method="GET" action="/disconnect">
                                 <input type="submit" value="Déconnexion" />
                             </form>`;
-    const connectForm    = `<form method="POST" action="/connect">
+    const connectForm    = `<form method="GET" action="/connect" enctype="application/x-www-form-urlencoded">
                                 <input name="login" />
                                 <input type="submit" value="Connexion" />
                             </form>`;    

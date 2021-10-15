@@ -12,14 +12,14 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use('/static', express_1.default.static('static'));
 const port = 8081;
 app.listen(port, () => console.log(`Le serveur est démarré sur le port ${port} !`));
-app.post("/disconnect", (_, res) => {
+app.get("/disconnect", (_, res) => {
     res.clearCookie("login");
     res.redirect("/");
 });
-app.post("/connect", (req, res) => {
-    const login = req.body['login'];
+app.get("/connect", (req, res) => {
+    const login = req.query['login'];
     if (!!login) {
-        res.setHeader("Set-Cookie", `login=${login}; Secure; HttpOnly`);
+        res.setHeader("Set-Cookie", `login=${login}; HttpOnly`);
     }
     res.redirect("/");
 });
@@ -47,15 +47,15 @@ app.get("/message", (req, res) => {
 });
 app.post("/message", (req, res) => {
     const data = req.body.data;
-    const author = req.body.author;
+    const author = req.cookies["login"];
     const idParent = req.body.idParent;
+    if (!author) {
+        return res.status(401)
+            .send(`Vous devez être identifié pour pouvoir poster un message`);
+    }
     if (!data) {
         return res.status(400)
             .send(`Il manque dans le corp du message la clef data ou bien sa valeur est ""`);
-    }
-    if (!author) {
-        return res.status(400)
-            .send(`Il manque dans le corp du message la clef author ou bien sa valeur est ""`);
     }
     const m = (0, data_1.createMessage)(author, data, idParent ? +idParent : undefined);
     if (m) {
@@ -67,39 +67,66 @@ app.post("/message", (req, res) => {
     }
 });
 app.delete("/message", (req, res) => {
-    const m = (0, data_1.getMessage)(+(req.query['id'] ?? NaN));
-    if (m) {
-        (0, data_1.deleteMessage)(+(req.query['id'] ?? NaN));
-        res.send(JSON.stringify(m));
+    const author = req.cookies["login"];
+    if (!author) {
+        res.status(401)
+            .send(`Vous devez être identifié pour pouvoir supprimer un message`);
     }
     else {
-        if (typeof req.query['id'] === 'string') {
-            res.status(404)
-                .send(`Aucun message n'est identifié par "${req.query['id']}"`);
+        const m = (0, data_1.getMessage)(+(req.query['id'] ?? NaN));
+        if (m) {
+            if (m.author === author) {
+                (0, data_1.deleteMessage)(+(req.query['id'] ?? NaN));
+                res.send(JSON.stringify(m));
+            }
+            else {
+                res.status(401)
+                    .send(`Vous devez être identifié en tant que ${m.author} pour pouvoir supprimer ce message`);
+            }
         }
         else {
-            res.status(404)
-                .send("Veuillez spécifier un paramètre id");
+            if (typeof req.query['id'] === 'string') {
+                res.status(404)
+                    .send(`Aucun message n'est identifié par "${req.query['id']}"`);
+            }
+            else {
+                res.status(404)
+                    .send("Veuillez spécifier un paramètre id");
+            }
         }
     }
 });
 app.put("/message", (req, res) => {
-    const data = req.body.data;
-    const id = req.body.id;
-    if (!data) {
-        return res.status(400)
-            .send(`Il manque dans le corp du message la clef data ou bien sa valeur est ""`);
-    }
-    if (!id) {
-        return res.status(400)
-            .send(`Il manque dans le corp du message la clef id ou bien sa valeur est ""`);
-    }
-    const m = (0, data_1.updateMessage)(+id, data);
-    if (m) {
-        return res.send(JSON.stringify(m));
+    const author = req.cookies["login"];
+    if (!author) {
+        return res.status(401)
+            .send(`Vous devez être identifié pour pouvoir poster un message`);
     }
     else {
-        return res.status(400)
-            .send(`Aucun message correspondant à idParent = ${id} n'a été trouvé`);
+        const data = req.body.data;
+        const id = req.body.id;
+        if (!data) {
+            return res.status(400)
+                .send(`Il manque dans le corp du message la clef data ou bien sa valeur est ""`);
+        }
+        if (!id) {
+            return res.status(400)
+                .send(`Il manque dans le corp du message la clef id ou bien sa valeur est ""`);
+        }
+        const m = (0, data_1.getMessage)(+id);
+        if (m) {
+            if (m.author === author) {
+                (0, data_1.updateMessage)(+id, data);
+                return res.send(JSON.stringify(m));
+            }
+            else {
+                return res.status(401)
+                    .send(`Vous devez être identifié en tant que ${m.author} pour pouvoir modifier ce message`);
+            }
+        }
+        else {
+            return res.status(400)
+                .send(`Aucun message correspondant à idParent = ${id} n'a été trouvé`);
+        }
     }
 });

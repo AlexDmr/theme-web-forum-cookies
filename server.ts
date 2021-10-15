@@ -10,15 +10,15 @@ app.use('/static', express.static('static'));
 const port = 8081;
 app.listen(port, () => console.log(`Le serveur est démarré sur le port ${port} !`));
 
-app.post("/disconnect", (_, res) => {
+app.get("/disconnect", (_, res) => {
     res.clearCookie("login");
     res.redirect("/");
 });
 
-app.post("/connect", (req, res) => {
-    const login = req.body['login'];
+app.get("/connect", (req, res) => {
+    const login = req.query['login'];
     if (!!login) {
-        res.setHeader("Set-Cookie", `login=${login}; Secure; HttpOnly`);
+        res.setHeader("Set-Cookie", `login=${login}; HttpOnly`);
     }
     res.redirect("/");
 });
