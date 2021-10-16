@@ -77,7 +77,7 @@ app.delete("/message", (req, res) => {
         if (m) {
             if (m.author === author) {
                 deleteMessage( +(req.query['id'] ?? NaN) );
-                res.send( JSON.stringify(m) );
+                res.redirect( "/" );
             } else {
                 res .status(401)
                     .send( `Vous devez être identifié en tant que ${m.author} pour pouvoir supprimer ce message` );
