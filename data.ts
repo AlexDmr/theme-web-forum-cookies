@@ -99,14 +99,9 @@ export function getMessage(id: number, L: MESSAGE[] = [...rootMessage.responses]
 }
 
 export function toHTML( login?: string ): string {
-    // lastModified = Date.now().toString();
-    const disconnectForm = `<form method="GET" action="/disconnect">
-                                <input type="submit" value="Déconnexion" />
-                            </form>`;
-    const connectForm    = `<form method="GET" action="/connect" enctype="application/x-www-form-urlencoded">
-                                <input name="login" />
-                                <input type="submit" value="Connexion" />
-                            </form>`;    
+    // Complétez les formulaires de connexion et déconnexion ici
+    const disconnectForm = ``;
+    const connectForm    = ``;    
     return `
         <!doctype html>
         <html>
