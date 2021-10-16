@@ -102,13 +102,7 @@ export function toHTML( login?: string ): string {
     // Complétez les formulaires de connexion et déconnexion ici
     const disconnectForm = ``;
     const connectForm    = ``;
-    const newMessageForm = `<form method="POST" action="/message" onsubmit="localStorage.setItem('message', '')">
-                                <textarea onkeyup = "localStorage.setItem('message', this.value)"
-                                          onload = "this.value = "toto"; // localStorage.setItem('message')"
-                                          name = "data"
-                                ></textarea>
-                                <input type="submit" />
-                            </form>`;
+    const newMessageForm = ``;
     return `
         <!doctype html>
         <html>
@@ -129,7 +123,7 @@ export function toHTML( login?: string ): string {
                 ${!!login ? newMessageForm : ''}
                 <script defer>
                     // Code pour initialiser le contenu du textarea de saisie d'un nouveau message
-                    document.querySelector("textarea").value = localStorage.getItem('message');
+                    document.querySelector("textarea").value = '';
                 </script>
             </body>
         </html>`;
