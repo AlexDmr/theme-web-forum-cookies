@@ -101,7 +101,8 @@ export function getMessage(id: number, L: MESSAGE[] = [...rootMessage.responses]
 export function toHTML( login?: string ): string {
     // Complétez les formulaires de connexion et déconnexion ici
     const disconnectForm = ``;
-    const connectForm    = ``;    
+    const connectForm    = ``;
+    const newMessageForm = ``;
     return `
         <!doctype html>
         <html>
@@ -119,6 +120,7 @@ export function toHTML( login?: string ): string {
                 <section class="messages">
                     ${rootMessage.responses.map( messageToHTML ).join("")}
                 </section>
+                ${!!login ? newMessageForm : ''}
             </body>
         </html>`;
 }
