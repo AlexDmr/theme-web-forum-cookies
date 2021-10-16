@@ -60,7 +60,7 @@ app.post("/message", (req, res) => {
     }
     const m = createMessage(author, data, idParent ? +idParent : undefined);
     if (m) {
-        return res  .send( JSON.stringify(m) );
+        return res  .redirect("/");
     } else {
         return res  .status(400)
                     .send( `Aucun message correspondant à idParent = ${idParent} n'a été trouvé` )

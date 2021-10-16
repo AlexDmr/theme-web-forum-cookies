@@ -59,7 +59,7 @@ app.post("/message", (req, res) => {
     }
     const m = (0, data_1.createMessage)(author, data, idParent ? +idParent : undefined);
     if (m) {
-        return res.send(JSON.stringify(m));
+        return res.redirect("/");
     }
     else {
         return res.status(400)

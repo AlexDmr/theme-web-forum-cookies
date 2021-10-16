@@ -96,13 +96,15 @@ function getMessage(id, L = [...exports.rootMessage.responses]) {
 }
 exports.getMessage = getMessage;
 function toHTML(login) {
-    // lastModified = Date.now().toString();
-    const disconnectForm = `<form method="GET" action="/disconnect">
-                                <input type="submit" value="Déconnexion" />
-                            </form>`;
-    const connectForm = `<form method="GET" action="/connect" enctype="application/x-www-form-urlencoded">
-                                <input name="login" />
-                                <input type="submit" value="Connexion" />
+    // Complétez les formulaires de connexion et déconnexion ici
+    const disconnectForm = ``;
+    const connectForm = ``;
+    const newMessageForm = `<form method="POST" action="/message" onsubmit="localStorage.setItem('message', '')">
+                                <textarea onkeyup = "localStorage.setItem('message', this.value)"
+                                          onload = "this.value = "toto"; // localStorage.setItem('message')"
+                                          name = "data"
+                                ></textarea>
+                                <input type="submit" />
                             </form>`;
     return `
         <!doctype html>
@@ -121,6 +123,11 @@ function toHTML(login) {
                 <section class="messages">
                     ${exports.rootMessage.responses.map(messageToHTML).join("")}
                 </section>
+                ${!!login ? newMessageForm : ''}
+                <script defer>
+                    // Code pour initialiser le contenu du textarea de saisie d'un nouveau message
+                    document.querySelector("textarea").value = localStorage.getItem('message');
+                </script>
             </body>
         </html>`;
 }
