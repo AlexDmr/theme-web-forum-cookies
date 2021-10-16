@@ -77,7 +77,7 @@ app.delete("/message", (req, res) => {
         if (m) {
             if (m.author === author) {
                 (0, data_1.deleteMessage)(+(req.query['id'] ?? NaN));
-                res.send(JSON.stringify(m));
+                res.redirect("/");
             }
             else {
                 res.status(401)
